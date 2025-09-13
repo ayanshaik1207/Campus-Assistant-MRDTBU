@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRDU Campus Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-beige: #f5f5dc;
+            --dark-beige: #e6d7c3;
+            --light-beige: #faf8f1;
+            --primary-black: #1a1a1a;
+            --secondary-black: #2d2d2d;
+            --accent-beige: #ddbf94;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light-beige) 0%, var(--dark-beige) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: var(--primary-black);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245, 245, 220, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-beige);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-black);
+            animation: pulse 2s infinite;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23f5f5dc"/><text x="50" y="60" text-anchor="middle" font-size="24" font-weight="bold" fill="%231a1a1a">MR</text></svg>');
+            background-size: cover;
+        }
+
+        .university-info h1 {
+            color: var(--primary-beige);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            animation: slideInFromLeft 1s ease-out;
+        }
+
+        .university-info .founder {
+            color: var(--accent-beige);
+            font-size: 1rem;
+            font-style: italic;
+            animation: slideInFromLeft 1s ease-out 0.3s both;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-beige);
+            animation: slideInFromRight 1s ease-out 0.5s both;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--accent-beige);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: cardSlideIn 0.8s ease-out forwards;
+            position: relative;
+        }
+
+        .service-card:nth-child(1) { animation-delay: 0.1s; }
+        .service-card:nth-child(2) { animation-delay: 0.2s; }
+        .service-card:nth-child(3) { animation-delay: 0.3s; }
+        .service-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 26, 26, 0.05), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary-black);
+        }
+
+        .service-image {
+            width: 100%;
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(to top, rgba(245, 245, 220, 0.8), transparent);
+        }
+
+        .service-content {
+            padding: 25px;
+        }
+
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            color: var(--primary-beige);
+            font-size: 1.5rem;
+            animation: rotateIn 1s ease-out;
+        }
+
+        .service-title {
+            color: var(--primary-black);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .service-description {
+            color: var(--secondary-black);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .service-features li {
+            color: var(--secondary-black);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .service-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-black);
+            font-weight: bold;
+        }
+
+        .chat-container {
+            background: var(--primary-black);
+            border-radius: 20px;
+            height: fit-content;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: slideInFromRight 1s ease-out 0.8s both;
+        }
+
+        .chat-header {
+            background: var(--accent-beige);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ai-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-beige);
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-title {
+            color: var(--primary-black);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            padding: 20px;
+            background: var(--primary-black);
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: messageSlide 0.5s ease-out;
+        }
+
+        .message.ai {
+            text-align: left;
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message-bubble {
+            display: inline-block;
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .message.ai .message-bubble {
+            background: var(--accent-beige);
+            color: var(--primary-black);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message.user .message-bubble {
+            background: var(--dark-beige);
+            color: var(--primary-black);
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: var(--secondary-black);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid var(--accent-beige);
+            border-radius: 25px;
+            background: var(--primary-beige);
+            color: var(--primary-black);
+            outline: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary-black);
+            transform: scale(1.02);
+        }
+
+        .send-button {
+            width: 50px;
+            height: 50px;
+            background: var(--accent-beige);
+            border: none;
+            border-radius: 50%;
+            color: var(--primary-black);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            background: var(--primary-beige);
+            transform: scale(1.1);
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 15px 20px;
+            background: var(--secondary-black);
+        }
+
+        .quick-action {
+            background: var(--accent-beige);
+            color: var(--primary-black);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-action:hover {
+            background: var(--primary-beige);
+            transform: translateY(-2px);
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 100px;
+            height: 100px;
+            background: var(--primary-black);
+            border-radius: 50%;
+            top: 20%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-beige);
+            transform: rotate(45deg);
+            top: 70%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+
+        .shape-3 {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-black);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            top: 50%;
+            left: 15%;
+            animation-delay: 4s;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes cardSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes rotateIn {
+            from {
+                opacity: 0;
+                transform: rotate(-180deg) scale(0);
+            }
+            to {
+                opacity: 1;
+                transform: rotate(0deg) scale(1);
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-30px) rotate(180deg);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            .university-info h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            .university-info h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo"></div>
+                <div class="university-info">
+                    <h1>Malla Reddy Deemed to be University</h1>
+                    <p class="founder">Founded by Ch. Malla Reddy</p>
+                </div>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>AI Assistant Online</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="services-section">
+            <div class="services-grid">
+                <div class="service-card" onclick="selectService('schedule')">
+                    <div class="service-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 400 150&quot;><rect width=&quot;400&quot; height=&quot;150&quot; fill=&quot;%23f5f5dc&quot;/><rect x=&quot;50&quot; y=&quot;30&quot; width=&quot;300&quot; height=&quot;90&quot; fill=&quot;%23ddbf94&quot; rx=&quot;10&quot;/><rect x=&quot;70&quot; y=&quot;50&quot; width=&quot;80&quot; height=&quot;50&quot; fill=&quot;%231a1a1a&quot; rx=&quot;5&quot;/><rect x=&quot;160&quot; y=&quot;50&quot; width=&quot;80&quot; height=&quot;50&quot; fill=&quot;%231a1a1a&quot; rx=&quot;5&quot;/><rect x=&quot;250&quot; y=&quot;50&quot; width=&quot;80&quot; height=&quot;50&quot; fill=&quot;%231a1a1a&quot; rx=&quot;5&quot;/><text x=&quot;200&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; font-size=&quot;16&quot; fill=&quot;%231a1a1a&quot;>Academic Schedule</text></svg>');"></div>
+                    <div class="service-content">
+                        <div class="service-icon">📅</div>
+                        <h3 class="service-title">Academic Schedule</h3>
+                        <p class="service-description">Get real-time information about class schedules, exam dates, and academic calendar.</p>
+                        <ul class="service-features">
+                            <li>Class timetables</li>
+                            <li>Exam schedules</li>
+                            <li>Academic calendar</li>
+                            <li>Event notifications</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card" onclick="selectService('facilities')">
+                    <div class="service-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 400 150&quot;><rect width=&quot;400&quot; height=&quot;150&quot; fill=&quot;%23f5f5dc&quot;/><rect x=&quot;50&quot; y=&quot;40&quot; width=&quot;100&quot; height=&quot;70&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;180&quot; y=&quot;30&quot; width=&quot;120&quot; height=&quot;90&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;60&quot; y=&quot;50&quot; width=&quot;80&quot; height=&quot;15&quot; fill=&quot;%231a1a1a&quot;/><rect x=&quot;60&quot; y=&quot;70&quot; width=&quot;80&quot; height=&quot;15&quot; fill=&quot;%231a1a1a&quot;/><rect x=&quot;60&quot; y=&quot;90&quot; width=&quot;80&quot; height=&quot;15&quot; fill=&quot;%231a1a1a&quot;/><circle cx=&quot;240&quot; cy=&quot;75&quot; r=&quot;25&quot; fill=&quot;%231a1a1a&quot;/><text x=&quot;200&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; font-size=&quot;16&quot; fill=&quot;%231a1a1a&quot;>Campus Facilities</text></svg>');"></div>
+                    <div class="service-content">
+                        <div class="service-icon">🏫</div>
+                        <h3 class="service-title">Campus Facilities</h3>
+                        <p class="service-description">Explore our world-class campus facilities and their availability.</p>
+                        <ul class="service-features">
+                            <li>Laboratory bookings</li>
+                            <li>Sports facilities</li>
+                            <li>Auditorium reservations</li>
+                            <li>Facility status</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card" onclick="selectService('dining')">
+                    <div class="service-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 400 150&quot;><rect width=&quot;400&quot; height=&quot;150&quot; fill=&quot;%23f5f5dc&quot;/><circle cx=&quot;200&quot; cy=&quot;75&quot; r=&quot;40&quot; fill=&quot;%23ddbf94&quot;/><circle cx=&quot;200&quot; cy=&quot;75&quot; r=&quot;25&quot; fill=&quot;%231a1a1a&quot;/><rect x=&quot;120&quot; y=&quot;70&quot; width=&quot;30&quot; height=&quot;10&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;250&quot; y=&quot;70&quot; width=&quot;30&quot; height=&quot;10&quot; fill=&quot;%23ddbf94&quot;/><text x=&quot;200&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; font-size=&quot;16&quot; fill=&quot;%231a1a1a&quot;>Dining Services</text></svg>');"></div>
+                    <div class="service-content">
+                        <div class="service-icon">🍽️</div>
+                        <h3 class="service-title">Dining Services</h3>
+                        <p class="service-description">Check dining hall menus, timings, and special meal options.</p>
+                        <ul class="service-features">
+                            <li>Daily menu</li>
+                            <li>Dining hours</li>
+                            <li>Special diets</li>
+                            <li>Cafeteria locations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card" onclick="selectService('library')">
+                    <div class="service-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 400 150&quot;><rect width=&quot;400&quot; height=&quot;150&quot; fill=&quot;%23f5f5dc&quot;/><rect x=&quot;80&quot; y=&quot;40&quot; width=&quot;20&quot; height=&quot;70&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;110&quot; y=&quot;30&quot; width=&quot;20&quot; height=&quot;80&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;140&quot; y=&quot;35&quot; width=&quot;20&quot; height=&quot;75&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;170&quot; y=&quot;25&quot; width=&quot;20&quot; height=&quot;85&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;200&quot; y=&quot;40&quot; width=&quot;20&quot; height=&quot;70&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;230&quot; y=&quot;30&quot; width=&quot;20&quot; height=&quot;80&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;260&quot; y=&quot;45&quot; width=&quot;20&quot; height=&quot;65&quot; fill=&quot;%23ddbf94&quot;/><rect x=&quot;290&quot; y=&quot;35&quot; width=&quot;20&quot; height=&quot;75&quot; fill=&quot;%23ddbf94&quot;/><text x=&quot;200&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; font-size=&quot;16&quot; fill=&quot;%231a1a1a&quot;>Library Services</text></svg>');"></div>
+                    <div class="service-content">
+                        <div class="service-icon">📚</div>
+                        <h3 class="service-title">Library Services</h3>
+                        <p class="service-description">Access digital resources, book catalogs, and study space information.</p>
+                        <ul class="service-features">
+                            <li>Book search & availability</li>
+                            <li>Digital resources</li>
+                            <li>Study room booking</li>
+                            <li>Opening hours</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card" onclick="selectService('administrative')">
+                    <div class="service-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 400 150&quot;><rect width=&quot;400&quot; height=&quot;150&quot; fill=&quot;%23f5f5dc&quot;/><rect x=&quot;100&quot; y=&quot;30&quot; width=&quot;200&quot; height=&quot;90&quot; fill=&quot;%23ddbf94&quot; rx=&quot;10&quot;/><rect x=&quot;120&quot; y=&quot;50&quot; width=&quot;40&quot; height=&quot;30&quot; fill=&quot;%231a1a1a&quot; rx=&quot;3&quot;/><rect x=&quot;180&quot; y=&quot;50&quot; width=&quot;40&quot; height=&quot;30&quot; fill=&quot;%231a1a1a&quot; rx=&quot;3&quot;/><rect x=&quot;240&quot; y=&quot;50&quot; width=&quot;40&quot; height=&quot;30&quot; fill=&quot;%231a1a1a&quot; rx=&quot;3&quot;/><rect x=&quot;120&quot; y=&quot;90&quot; width=&quot;160&quot; height=&quot;8&quot; fill=&quot;%231a1a1a&quot; rx=&quot;2&quot;/><text x=&quot;200&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; font-size=&quot;16&quot; fill=&quot;%231a1a1a&quot;>Administrative Services</text></svg>');"></div>
+                    <div class="service-content">
+                        <div class="service-icon">🏛️</div>
+                        <h3 class="service-title">Administrative Services</h3>
+                        <p class="service-description">Get help with administrative procedures and document requests.</p>
+                        <ul class="service-features">
+                            <li>Admission procedures</li>
+                            <li>Fee payments</li>
+                            <li>Document requests</li>
+                            <li>Contact information</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card" onclick="selectService('transport')">
+                    <div class="service-image" style="background-image: url('data:image/svg+xml,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 400 150&quot;><rect width=&quot;400&quot; height=&quot;150&quot; fill=&quot;%23f5f5dc&quot;/><rect x=&quot;80&quot; y=&quot;60&quot; width=&quot;240&quot; height=&quot;50&quot; fill=&quot;%23ddbf94&quot; rx=&quot;25&quot;/><rect x=&quot;90&quot; y=&quot;70&quot; width=&quot;60&quot; height=&quot;30&quot; fill=&quot;%231a1a1a&quot; rx=&quot;3&quot;/><rect x=&quot;170&quot; y=&quot;70&quot; width=&quot;60&quot; height=&quot;30&quot; fill=&quot;%231a1a1a&quot; rx=&quot;3&quot;/><rect x=&quot;250&quot; y=&quot;70&quot; width=&quot;60&quot; height=&quot;30&quot; fill=&quot;%231a1a1a&quot; rx=&quot;3&quot;/><circle cx=&quot;110&quot; cy=&quot;120&quot; r=&quot;15&quot; fill=&quot;%231a1a1a&quot;/><circle cx=&quot;290&quot; cy=&quot;120&quot; r=&quot;15&quot; fill=&quot;%231a1a1a&quot;/><text x=&quot;200&quot; y=&quot;140&quot; text-anchor=&quot;middle&quot; font-size=&quot;16&quot; fill=&quot;%231a1a1a&quot;>Transportation</text></svg>');"></div>
+                    <div class="service-content">
+                        <div class="service-icon">🚌</div>
+                        <h3 class="service-title">Transportation</h3>
+                        <p class="service-description">Get information about campus shuttle services and transportation options.</p>
+                        <ul class="service-features">
+                            <li>Bus schedules</li>
+                            <li>Route information</li>
+                            <li>Parking details</li>
+                            <li>Transportation fees</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="ai-avatar">🤖</div>
+                <div>
+                    <h3 class="chat-title">MRDU AI Assistant</h3>
+                    <p style="color: var(--secondary-black); font-size: 0.9rem; margin: 0;">Always here to help</p>
+                </div>
+            </div>
+            
+            <div class="quick-actions">
+                <button class="quick-action" onclick="askQuickQuestion('What are today\'s class timings?')">Today's Classes</button>
+                <button class="quick-action" onclick="askQuickQuestion('Show me library hours')">Library Hours</button>
+                <button class="quick-action" onclick="askQuickQuestion('What\'s for lunch today?')">Today's Menu</button>
+                <button class="quick-action" onclick="askQuickQuestion('How do I pay fees?')">Pay Fees</button>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="message-bubble">
+                        👋 Welcome to Malla Reddy Deemed to be University! I'm your AI campus assistant. I can help you with schedules, facilities, dining, library services, and administrative procedures. How can I assist you today?
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything about MRDU..." onkeypress="handleKeyPress(event)">
+                <button class="send-button" onclick="sendMessage()">
+                    <span>➤</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Campus database with comprehensive information
+        const campusDatabase = {
+            schedule: {
+                classes: {
+                    "Monday": [
+                        { time: "9:00-10:30", subject: "Engineering Mathematics", room: "Block A-101", faculty: "Dr. Sharma" },
+                        { time: "10:45-12:15", subject: "Computer Science Fundamentals", room: "Block B-205", faculty: "Prof. Kumar" },
+                        { time: "1:15-2:45", subject: "Physics Laboratory", room: "Physics Lab", faculty: "Dr. Patel" },
+                        { time: "3:00-4:30", subject: "Communication Skills", room: "Block C-301", faculty: "Ms. Reddy" }
+                    ],
+                    "Tuesday": [
+                        { time: "9:00-10:30", subject: "Data Structures", room: "Block A-102", faculty: "Dr. Singh" },
+                        { time: "10:45-12:15", subject: "Digital Electronics", room: "Block B-201", faculty: "Prof. Gupta" },
+                        { time: "1:15-2:45", subject: "Chemistry Laboratory", room: "Chem Lab", faculty: "Dr. Mehta" }
+                    ]
+                },
+                exams: [
+                    { date: "2025-09-25", subject: "Mid-term Mathematics", time: "10:00 AM", venue: "Main Auditorium" },
+                    { date: "2025-09-28", subject: "Computer Science Assessment", time: "2:00 PM", venue: "Block A" },
+                    { date: "2025-10-05", subject: "Physics Practical Exam", time: "9:00 AM", venue: "Physics Lab" }
+                ]
+            },
+            facilities: {
+                library: {
+                    hours: "6:00 AM - 11:00 PM (Monday-Saturday), 8:00 AM - 10:00 PM (Sunday)",
+                    floors: 4,
+                    capacity: 2000,
+                    digitalResources: ["IEEE Xplore", "ACM Digital Library", "Springer", "Nature"],
+                    services: ["Book lending", "Digital access", "Study rooms", "Research assistance"]
+                },
+                labs: [
+                    { name: "Computer Science Lab", capacity: 60, equipment: "Latest PCs with software", availability: "Available" },
+                    { name: "Physics Laboratory", capacity: 40, equipment: "Advanced instruments", availability: "Occupied until 3 PM" },
+                    { name: "Chemistry Lab", capacity: 35, equipment: "Safety equipment included", availability: "Available" },
+                    { name: "Electronics Lab", capacity: 45, equipment: "Circuit boards and components", availability: "Available" }
+                ],
+                sports: {
+                    indoor: ["Badminton courts", "Table tennis", "Chess room", "Gymnasium"],
+                    outdoor: ["Cricket ground", "Football field", "Basketball courts", "Tennis courts", "Athletics track"],
+                    hours: "5:00 AM - 9:00 PM"
+                },
+                auditorium: {
+                    capacity: 800,
+                    facilities: ["AC", "Sound system", "Projector", "Stage lighting"],
+                    booking: "Contact admin office"
+                }
+            },
+            dining: {
+                mainCafeteria: {
+                    hours: "7:00 AM - 9:00 PM",
+                    breakfast: "7:00 AM - 10:00 AM",
+                    lunch: "12:00 PM - 3:00 PM",
+                    dinner: "6:00 PM - 9:00 PM"
+                },
+                todayMenu: {
+                    breakfast: ["Idli Sambar", "Upma", "Poha", "Bread Toast", "Tea/Coffee", "Fresh Juice"],
+                    lunch: ["Rice", "Dal", "Chicken Curry", "Vegetable Curry", "Chapati", "Curd", "Pickle", "Sweet"],
+                    dinner: ["Biryani", "Raita", "Shorba", "Mixed Vegetables", "Naan", "Ice Cream"]
+                },
+                specialDiets: ["Vegetarian", "Vegan", "Jain food", "Gluten-free options"],
+                outlets: [
+                    { name: "Main Cafeteria", location: "Ground floor, Main building" },
+                    { name: "Coffee Corner", location: "Library entrance" },
+                    { name: "Snack Bar", location: "Sports complex" }
+                ]
+            },
+            administrative: {
+                admissions: {
+                    office: "Block A, Ground floor",
+                    hours: "9:00 AM - 5:00 PM",
+                    contact: "+91-40-2345-6789",
+                    email: "admissions@mallareddyuniversity.ac.in"
+                },
+                fees: {
+                    methods: ["Online payment", "Bank transfer", "DD", "Cash (at counter)"],
+                    deadlines: "15th of every month",
+                    office: "Accounts section, Block B"
+                },
+                documents: {
+                    transcripts: "3-5 working days",
+                    certificates: "7-10 working days",
+                    bonafide: "Same day",
+                    process: "Submit application at student services"
+                },
+                contacts: {
+                    registrar: "+91-40-2345-6700",
+                    studentAffairs: "+91-40-2345-6710",
+                    accounts: "+91-40-2345-6720",
+                    placement: "+91-40-2345-6730"
+                }
+            },
+            transportation: {
+                busRoutes: [
+                    { route: "Route A", areas: "Secunderabad - Uppal - MRDU", timings: "7:00 AM, 8:00 AM, 5:00 PM, 6:00 PM" },
+                    { route: "Route B", areas: "Hyderabad Central - Nacharam - MRDU", timings: "7:30 AM, 8:30 AM, 5:30 PM, 6:30 PM" },
+                    { route: "Route C", areas: "LB Nagar - Habsiguda - MRDU", timings: "7:15 AM, 8:15 AM, 5:15 PM, 6:15 PM" }
+                ],
+                parking: {
+                    twoWheeler: "₹500/month",
+                    fourWheeler: "₹1000/month",
+                    visitor: "₹20/day"
+                },
+                shuttle: {
+                    campusShuttle: "Every 15 minutes within campus",
+                    hours: "7:00 AM - 8:00 PM"
+                }
+            }
+        };
+
+        let currentService = null;
+        let chatHistory = [];
+
+        function selectService(service) {
+            currentService = service;
+            const serviceNames = {
+                'schedule': 'Academic Schedule',
+                'facilities': 'Campus Facilities', 
+                'dining': 'Dining Services',
+                'library': 'Library Services',
+                'administrative': 'Administrative Services',
+                'transport': 'Transportation'
+            };
+            
+            addMessage('ai', `Great! I'm now ready to help you with ${serviceNames[service]}. What would you like to know?`);
+            
+            // Add service-specific quick suggestions
+            const suggestions = getServiceSuggestions(service);
+            if (suggestions.length > 0) {
+                setTimeout(() => {
+                    addMessage('ai', `Here are some things I can help you with: ${suggestions.join(', ')}`);
+                }, 1000);
+            }
+        }
+
+        function getServiceSuggestions(service) {
+            const suggestions = {
+                'schedule': ['today\'s classes', 'exam dates', 'academic calendar'],
+                'facilities': ['library hours', 'lab availability', 'sports facilities'],
+                'dining': ['today\'s menu', 'dining hours', 'special diets'],
+                'library': ['opening hours', 'book search', 'study rooms'],
+                'administrative': ['fee payment', 'document requests', 'contact info'],
+                'transport': ['bus schedules', 'parking fees', 'shuttle timings']
+            };
+            return suggestions[service] || [];
+        }
+
+        function askQuickQuestion(question) {
+            addMessage('user', question);
+            setTimeout(() => {
+                const response = generateResponse(question);
+                addMessage('ai', response);
+            }, 1000);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            addMessage('user', message);
+            input.value = '';
+            
+            // Simulate AI thinking
+            setTimeout(() => {
+                const response = generateResponse(message);
+                addMessage('ai', response);
+            }, 1000 + Math.random() * 1000);
+        }
+
+        function addMessage(sender, message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.className = 'message-bubble';
+            bubbleDiv.textContent = message;
+            
+            messageDiv.appendChild(bubbleDiv);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            chatHistory.push({ sender, message, timestamp: new Date() });
+        }
+
+        function generateResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // Schedule related queries
+            if (message.includes('class') || message.includes('schedule') || message.includes('timetable')) {
+                if (message.includes('today') || message.includes('monday')) {
+                    const todayClasses = campusDatabase.schedule.classes.Monday;
+                    let response = "📅 Today's class schedule:\n\n";
+                    todayClasses.forEach(cls => {
+                        response += `⏰ ${cls.time}: ${cls.subject} (${cls.room}) - ${cls.faculty}\n`;
+                    });
+                    return response;
+                }
+                return "I can help you with class schedules. Which day would you like to know about? I have detailed timetables for all weekdays.";
+            }
+            
+            // Exam related queries
+            if (message.includes('exam') || message.includes('test')) {
+                const upcomingExams = campusDatabase.schedule.exams;
+                let response = "📋 Upcoming examinations:\n\n";
+                upcomingExams.forEach(exam => {
+                    response += `📅 ${exam.date}: ${exam.subject} at ${exam.time} (${exam.venue})\n`;
+                });
+                return response;
+            }
+            
+            // Library queries
+            if (message.includes('library') || message.includes('book')) {
+                if (message.includes('hours') || message.includes('timing')) {
+                    return `📚 Library Hours: ${campusDatabase.facilities.library.hours}\n\nThe library has ${campusDatabase.facilities.library.floors} floors with a capacity of ${campusDatabase.facilities.library.capacity} students. We also provide access to digital resources including IEEE Xplore, ACM Digital Library, and more!`;
+                }
+                return "📚 Our library offers comprehensive services including book lending, digital resources, study rooms, and research assistance. What specific information do you need?";
+            }
+            
+            // Dining queries
+            if (message.includes('food') || message.includes('dining') || message.includes('menu') || message.includes('lunch') || message.includes('breakfast') || message.includes('dinner')) {
+                if (message.includes('today') || message.includes('menu')) {
+                    let response = "🍽️ Today's Menu:\n\n";
+                    response += "🌅 Breakfast: " + campusDatabase.dining.todayMenu.breakfast.join(", ") + "\n\n";
+                    response += "🌞 Lunch: " + campusDatabase.dining.todayMenu.lunch.join(", ") + "\n\n";
+                    response += "🌙 Dinner: " + campusDatabase.dining.todayMenu.dinner.join(", ");
+                    return response;
+                }
+                if (message.includes('hours') || message.includes('timing')) {
+                    const hours = campusDatabase.dining.mainCafeteria;
+                    return `🍽️ Main Cafeteria Hours:\n\n🌅 Breakfast: ${hours.breakfast}\n🌞 Lunch: ${hours.lunch}\n🌙 Dinner: ${hours.dinner}\n\nOverall: ${hours.hours}`;
+                }
+                return "🍽️ I can help you with dining information including today's menu, timings, and special dietary options. What would you like to know?";
+            }
+            
+            // Facility queries
+            if (message.includes('lab') || message.includes('facility') || message.includes('sports')) {
+                if (message.includes('lab')) {
+                    let response = "🔬 Laboratory Information:\n\n";
+                    campusDatabase.facilities.labs.forEach(lab => {
+                        response += `🏛️ ${lab.name}: ${lab.capacity} capacity, ${lab.equipment} - Status: ${lab.availability}\n`;
+                    });
+                    return response;
+                }
+                if (message.includes('sport')) {
+                    const sports = campusDatabase.facilities.sports;
+                    return `🏃‍♂️ Sports Facilities:\n\n🏠 Indoor: ${sports.indoor.join(", ")}\n\n🌳 Outdoor: ${sports.outdoor.join(", ")}\n\n⏰ Hours: ${sports.hours}`;
+                }
+                return "🏫 Our campus has world-class facilities including modern labs, sports complexes, auditorium, and more. What specific facility information do you need?";
+            }
+            
+            // Administrative queries
+            if (message.includes('fee') || message.includes('payment') || message.includes('admin')) {
+                if (message.includes('fee') || message.includes('payment')) {
+                    const fees = campusDatabase.administrative.fees;
+                    return `💳 Fee Payment Information:\n\n💰 Payment Methods: ${fees.methods.join(", ")}\n📅 Deadline: ${fees.deadlines}\n🏢 Office: ${fees.office}\n\nYou can pay online through our student portal or visit the accounts section.`;
+                }
+                return "🏛️ I can help with administrative procedures including admissions, fee payments, document requests, and contact information. What do you need assistance with?";
+            }
+            
+            // Transportation queries
+            if (message.includes('bus') || message.includes('transport') || message.includes('parking')) {
+                if (message.includes('bus') || message.includes('route')) {
+                    let response = "🚌 Bus Route Information:\n\n";
+                    campusDatabase.transportation.busRoutes.forEach(route => {
+                        response += `🚍 ${route.route}: ${route.areas}\nTimings: ${route.timings}\n\n`;
+                    });
+                    return response;
+                }
+                if (message.includes('parking')) {
+                    const parking = campusDatabase.transportation.parking;
+                    return `🚗 Parking Information:\n\n🏍️ Two Wheeler: ${parking.twoWheeler}\n🚗 Four Wheeler: ${parking.fourWheeler}\n👥 Visitor: ${parking.visitor}\n\nContact security for monthly passes.`;
+                }
+                return "🚌 I can help with transportation including bus routes, schedules, parking information, and campus shuttle services. What do you need to know?";
+            }
+            
+            // General greetings and help
+            if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+                return "👋 Hello! I'm your MRDU AI assistant. I can help you with academic schedules, campus facilities, dining services, library information, administrative procedures, and transportation. How can I assist you today?";
+            }
+            
+            if (message.includes('help')) {
+                return "🤝 I'm here to help! I can assist you with:\n\n📅 Academic schedules & exam dates\n🏫 Campus facilities & lab bookings\n🍽️ Dining services & menus\n📚 Library services & hours\n🏛️ Administrative procedures\n🚌 Transportation & parking\n\nJust ask me anything about MRDU!";
+            }
+            
+            if (message.includes('founder') || message.includes('malla reddy') || message.includes('history')) {
+                return "🏛️ Malla Reddy Deemed to be University was founded by the visionary Ch. Malla Reddy. The university is committed to providing world-class education and fostering innovation. Our campus offers state-of-the-art facilities and a vibrant learning environment for students from diverse backgrounds.";
+            }
+            
+            // Default response
+            return "🤖 I understand you're asking about '" + userMessage + "'. I can help you with academic schedules, campus facilities, dining services, library information, administrative procedures, and transportation. Could you please be more specific about what you'd like to know?";
+        }
+
+        // Initialize chat with welcome message
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add some initial animation delays
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.service-card');
+                cards.forEach((card, index) => {
+                    card.style.animationDelay = (index * 0.1) + 's';
+                });
+            }, 100);
+        });
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
